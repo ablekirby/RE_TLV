@@ -1,8 +1,7 @@
-# A class to ingest and parse htlc strings, and make their contents available in various useful formats
+# A class to parse TLV records and provide high level access to their contents available in various useful formats
 # September 25, 2021
 # Able Kirby
 
-#import os
 import json
 import base64
 
@@ -293,9 +292,6 @@ class RE_TLV:
         self.amt_paid_msat = str[19]
         self.state = str[20]
         
-
-        
-
         # Parse semi-colon seperated JSON
         try:
             self.htlcs = json.loads(str[21].replace(';',',')[1:-1])
@@ -311,10 +307,7 @@ class RE_TLV:
         self.creation_date_str = str[25]
         self.settle_date_str = str[26]
         self.btc_value = str[27]
-        self.btc_amt_paid_sat = str[28]
-
-        # Re
-        
+        self.btc_amt_paid_sat = str[28]        
         return self
 
 

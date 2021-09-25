@@ -3,7 +3,8 @@
 # Able Kirby
 
 # Instructions:
-# Export invoices from RTL as a .csv file [Make sure to set the max ]
+# Export invoices from RTL as a .csv file
+# run      python RE_testTLV.py [csv file name]
 
 
 from RE_TLV import RE_TLV
@@ -17,7 +18,6 @@ with open(fn,mode='r') as file:
     csvlines = file.readlines() 
 
 # For every record in file
-
 print("")
 appsum = []
 apps = []
