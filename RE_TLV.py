@@ -310,4 +310,48 @@ class RE_TLV:
         self.btc_amt_paid_sat = str[28]        
         return self
 
+    def fromJSON(tlvJSON):
+        self = RE_TLV()
+        self.raw = tlvJSON
+
+        self.r_preimage = tlvJSON["rPreimage"]
+        self.r_hash = tlvJSON["rHash"]
+        self.value = tlvJSON["value"]
+        self.settled = tlvJSON["settled"]
+        self.creation_date = tlvJSON["creationDate"]
+        self.settle_date = tlvJSON["settleDate"]
+        self.cltv_expiry = tlvJSON["cltvExpiry"]
+        self.add_index = tlvJSON["addIndex"]
+        self.settle_index = tlvJSON["settleIndex"]
+        self.amt_paid = tlvJSON["amtPaid"]
+        self.amt_paid_sat = tlvJSON["amtPaidSat"]
+        self.amt_paid_msat = tlvJSON["amtPaidMsat"]
+        self.state = tlvJSON["state"]
+        self.htlcs = []
+        self.value_msat = tlvJSON["valueMsat"]
+        self.features = []
+        self.is_keysend = tlvJSON["isKeysend"]
+        self.payment_addr = tlvJSON["paymentAddr"]
+
+        # Empty Fields
+        self.memo = ""
+        self.payment_request = ""
+        self.description_hash = ""
+        self.expiry = ""
+        self.fallback_addr = ""
+        self.route_hints = ""
+        self.private = ""
+        self.creation_date_str = ""
+        self.settle_date_str = ""
+        self.btc_value = ""
+        self.btc_amt_paid_sat = "" 
+
+        return self
+        
+        
+        
+        
+
+        
+
 
