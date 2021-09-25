@@ -322,10 +322,22 @@ class RE_TLV:
         except:
             self.settled = ""
         self.creation_date = tlvJSON["creationDate"]
-        self.settle_date = tlvJSON["settleDate"]
+
+        try:
+            self.settle_date = tlvJSON["settleDate"]
+        except:
+            self.settle_date = ""
+
+
         self.cltv_expiry = tlvJSON["cltvExpiry"]
+
         self.add_index = tlvJSON["addIndex"]
-        self.settle_index = tlvJSON["settleIndex"]
+
+        try:
+            self.settle_index = tlvJSON["settleIndex"]
+        except:
+            self.settle_index = ""
+            
         self.amt_paid = tlvJSON["amtPaid"]
         self.amt_paid_sat = tlvJSON["amtPaidSat"]
         self.amt_paid_msat = tlvJSON["amtPaidMsat"]
