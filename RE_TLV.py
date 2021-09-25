@@ -317,7 +317,10 @@ class RE_TLV:
         self.r_preimage = tlvJSON["rPreimage"]
         self.r_hash = tlvJSON["rHash"]
         self.value = tlvJSON["value"]
-        self.settled = tlvJSON["settled"]
+        try:
+            self.settled = tlvJSON["settled"]
+        except:
+            self.settled = ""
         self.creation_date = tlvJSON["creationDate"]
         self.settle_date = tlvJSON["settleDate"]
         self.cltv_expiry = tlvJSON["cltvExpiry"]
