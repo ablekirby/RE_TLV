@@ -322,10 +322,19 @@ class RE_TLV:
         self.cltv_expiry = tlvJSON["cltvExpiry"]
         self.add_index = tlvJSON["addIndex"]
         self.state = tlvJSON["state"]
-        self.htlcs = []
         self.value_msat = tlvJSON["valueMsat"]
-        self.features = []
         self.payment_addr = tlvJSON["paymentAddr"]
+
+        # JSON objects
+        try:
+            self.htlcs = tlvJSON("htlcs")
+        except:
+            self.htlcs = []
+        try:
+            self.features = tlvJSON("features")
+        except:
+            self.features = []
+
 
         # Settled Transactions only
         try:
