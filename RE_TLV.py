@@ -348,9 +348,9 @@ class RE_TLV:
             self.settled = ""
             self.settle_index = ""
             self.settle_date = ""
-            self.amt_paid = ""
-            self.amt_paid_sat = ""
-            self.amt_paid_msat = ""
+            self.amt_paid = "0"
+            self.amt_paid_sat = "0"
+            self.amt_paid_msat = "0"
 
         # Keysend or not?
         try:
