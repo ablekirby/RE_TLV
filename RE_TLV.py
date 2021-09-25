@@ -314,45 +314,53 @@ class RE_TLV:
         self = RE_TLV()
         self.raw = tlvJSON
 
+        # Required Fields
         self.r_preimage = tlvJSON["rPreimage"]
         self.r_hash = tlvJSON["rHash"]
         self.value = tlvJSON["value"]
-        try:
-            self.settled = tlvJSON["settled"]
-        except:
-            self.settled = ""
         self.creation_date = tlvJSON["creationDate"]
-
-        try:
-            self.settle_date = tlvJSON["settleDate"]
-        except:
-            self.settle_date = ""
-
-
         self.cltv_expiry = tlvJSON["cltvExpiry"]
-
         self.add_index = tlvJSON["addIndex"]
-
-        try:
-            self.settle_index = tlvJSON["settleIndex"]
-        except:
-            self.settle_index = ""
-            
-        self.amt_paid = tlvJSON["amtPaid"]
-        self.amt_paid_sat = tlvJSON["amtPaidSat"]
-        self.amt_paid_msat = tlvJSON["amtPaidMsat"]
         self.state = tlvJSON["state"]
         self.htlcs = []
         self.value_msat = tlvJSON["valueMsat"]
         self.features = []
-        self.is_keysend = tlvJSON["isKeysend"]
         self.payment_addr = tlvJSON["paymentAddr"]
 
-        # Empty Fields
-        self.memo = ""
-        self.payment_request = ""
+        # Settled Transactions only
+        try:
+            self.settled = tlvJSON["settled"]
+            self.settle_index = tlvJSON["settleIndex"]
+            self.settle_date = tlvJSON["settleDate"]
+            self.amt_paid = tlvJSON["amtPaid"]
+            self.amt_paid_sat = tlvJSON["amtPaidSat"]
+            self.amt_paid_msat = tlvJSON["amtPaidMsat"]
+        except:
+            self.settled = ""
+            self.settle_index = ""
+            self.settle_date = ""
+            self.amt_paid = ""
+            self.amt_paid_sat = ""
+            self.amt_paid_msat = ""
+
+        # Keysend or not?
+        try:
+            self.is_keysend = tlvJSON["isKeysend"]
+        except:
+            self.is_keysend = "nope"
+
+        # Block for "created" invoices
+        try:
+            self.memo = tlvJSON["memo"]
+            self.payment_request = tlvJSON["paymentRequest"]
+            self.expiry = tlvJSON["expiry"]
+        except:
+            self.memo = ""
+            self.payment_request = ""
+            self.expiry = ""  
+       
+        # Expected to be unused in this data format
         self.description_hash = ""
-        self.expiry = ""
         self.fallback_addr = ""
         self.route_hints = ""
         self.private = ""
