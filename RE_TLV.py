@@ -11,7 +11,7 @@ class RE_TLV:
 
     # Simple Get methods
     def getAmmount(self):
-        amt = ''
+        amt = '0'
         try:
             amt = self.amt_paid_sat
         except:
