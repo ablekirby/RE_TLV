@@ -17,7 +17,6 @@ with open(fn,mode='r') as file:
     file.readline() #discard first line (header)
     csvlines = file.readlines() 
 
-# For every record in file
 print("")
 appsum = []
 apps = []
@@ -25,11 +24,12 @@ boostsum = []
 boosters = []
 sats_of_unknown_origin = 0
 unidentified_transactions = 0
-
 print("---TLV Messages---")
+
+# For every record in file
 for line in csvlines:
     mytlv = RE_TLV.fromcsv(line)
-    # Coleate streaming sats by app
+    # Collate streaming sats by app
     if not mytlv.isBoost():
         app = mytlv.getSenderApp()
         asats = mytlv.getAmmountInt()
@@ -42,7 +42,7 @@ for line in csvlines:
             apps.append(app)
             appsum.append(asats)
 
-    # Coleate Boosts by name
+    # Collate Boosts by name
     elif mytlv.isBoost():
         booster = mytlv.getSenderName()
         bsats = mytlv.getAmmountInt()
@@ -58,6 +58,7 @@ for line in csvlines:
         sats_of_unknown_origin += mytlv.getAmmountInt()
         unresolved_transactions += 1
 
+    # Print any messages
     if mytlv.hasMessage():
         print("Record Number: " + mytlv.getRecordNum())
         print("\tAmmount: " + mytlv.getAmmount() + " sats")
