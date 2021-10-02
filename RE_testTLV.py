@@ -70,14 +70,14 @@ for line in csvlines:
 
 # Print unique list of Apps
 print("---Sats From Streaming Apps---")
-for i in range(0,len(apps)-1):
+for i in range(len(apps)):
     print(apps[i] + " = " + str(appsum[i]) + " sats")
 print("\tTotal From Streams: " + str(sum(appsum)) + " sats")
 print("")
 
 # Print unique list of Boosters
 print("---Sats From Boosters---")
-for i in range(0,len(boosters)-1):
+for i in range(len(boosters)):
     print(boosters[i] + " = " + str(boostsum[i]) + " sats")
 print("\tTotal From Boosts: " + str(sum(boostsum)) + " sats")
 print("")
