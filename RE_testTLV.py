@@ -12,6 +12,7 @@ import sys
 
 # Load RTL exported records
 fn = sys.argv[1]
+#fn = "Invoices_20211209_to_20211215.csv"
 with open(fn,mode='r') as file:
     file.seek(3) # discard BOM
     file.readline() #discard first line (header)
@@ -60,7 +61,8 @@ for line in csvlines:
 
     # Print any messages
     if mytlv.hasMessage():
-        print("Record Number: " + mytlv.getRecordNum())
+        # print("Record Number: " + mytlv.getRecordNum())
+        print("\tShow Name: " + mytlv.getShowName())
         print("\tAmmount: " + mytlv.getAmmount() + " sats")
         print("\tDate: " + mytlv.getDate() + " UTC")
         print("\tSender Name: " + mytlv.getSenderName())

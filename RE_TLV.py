@@ -4,6 +4,7 @@
 
 import json
 import base64
+import datetime
 
 class RE_TLV:
     def __init__(self):
@@ -29,6 +30,14 @@ class RE_TLV:
             pass
         return date
 
+    def getDate(self):
+        mydate = "nodate"
+        try:
+            mydate = self.settle_date_str
+        except:
+            pass
+        return mydate
+
     def getFeatures(self):
         features = ''
         try:
@@ -44,6 +53,34 @@ class RE_TLV:
         except:
             pass
         return htlcs
+
+
+    def getShowName(self):
+        show = '-no record-'
+        try:
+            record = self.get7629169()
+            show = record["podcast"]
+        except:
+            pass
+
+        if show == None:
+            show = '-no record-'
+
+        return show    
+
+    def getEpName(self):
+        ep = '-no record-'
+        try:
+            record = self.get7629169()
+            ep = record["episode"]
+        except:
+            pass
+
+        if ep == None:
+            ep = '-no record-'
+
+        return ep    
+   
 
 
     # START - Low level functions to parse custom records
@@ -222,8 +259,11 @@ class RE_TLV:
         r7629169 = self.get7629169()
         try:
             message = r7629169["message"]
+            
         except:
             pass
+
+        message = str(message)
 
         return message
 
@@ -237,8 +277,15 @@ class RE_TLV:
 
     def hasMessage(self):
         hasMessage = False
-        if len(self.getMessage()) > 0:
-            hasMessage = True
+        try:
+            if len(self.getMessage()) > 0:
+                hasMessage = True
+        except:
+            #print("Unable to read boostagram. Record Number #" + self.getRecordNum())
+            #print(self.getSenderApp())
+            #print(self.getCustomRecords())
+            pass
+
         return hasMessage
 
     def isBoost(self):
@@ -270,44 +317,47 @@ class RE_TLV:
         str = str.split(',')
 
         #
-        self.memo = str[0]
-        self.r_preimage = str[1]
-        self.r_hash = str[2]
-        self.value = str[3]
-        self.value_msat = str[4]
-        self.settled = str[5]
-        self.creation_date = str[6]
-        self.settle_date = str[7]
-        self.payment_request = str[8]
-        self.description_hash = str[9]
-        self.expiry = str[10]
-        self.fallback_addr = str[11]
-        self.cltv_expiry = str[12]
-        self.route_hints = str[13]
-        self.private = str[14]
-        self.add_index = str[15]
-        self.settle_index = str[16]
-        self.amt_paid = str[17]
-        self.amt_paid_sat = str[18]
-        self.amt_paid_msat = str[19]
-        self.state = str[20]
-        
-        # Parse semi-colon seperated JSON
         try:
-            self.htlcs = json.loads(str[21].replace(';',',')[1:-1])
-        except:
-            self.htlcs = ""
-        try:
-            self.features = json.loads(str[22].replace(';',','))
-        except:
-            pass
+            self.memo = str[0]
+            self.r_preimage = str[1]
+            self.r_hash = str[2]
+            self.value = str[3]
+            self.value_msat = str[4]
+            self.settled = str[5]
+            self.creation_date = str[6]
+            self.settle_date = str[7]
+            self.payment_request = str[8]
+            self.description_hash = str[9]
+            self.expiry = str[10]
+            self.fallback_addr = str[11]
+            self.cltv_expiry = str[12]
+            self.route_hints = str[13]
+            self.private = str[14]
+            self.add_index = str[15]
+            self.settle_index = str[16]
+            self.amt_paid = str[17]
+            self.amt_paid_sat = str[18]
+            self.amt_paid_msat = str[19]
+            self.state = str[20]
+            
+            # Parse semi-colon seperated JSON
+            try:
+                self.htlcs = json.loads(str[21].replace(';',',')[1:-1])
+            except:
+                self.htlcs = ""
+            try:
+                self.features = json.loads(str[22].replace(';',','))
+            except:
+                pass
 
-        self.is_keysend = str[23]
-        self.payment_addr = str[24]
-        self.creation_date_str = str[25]
-        self.settle_date_str = str[26]
-        self.btc_value = str[27]
-        self.btc_amt_paid_sat = str[28]        
+            self.is_keysend = str[23]
+            self.payment_addr = str[24]
+            self.creation_date_str = str[25]
+            self.settle_date_str = str[26]
+            self.btc_value = str[27]
+            self.btc_amt_paid_sat = str[28]        
+        except:
+                pass
         return self
 
     def fromJSON(tlvJSON):
