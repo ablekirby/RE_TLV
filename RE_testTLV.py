@@ -9,6 +9,8 @@
 
 from RE_TLV import RE_TLV
 import sys
+from datetime import datetime, timezone
+import pytz
 
 # Load RTL exported records
 #fn = sys.argv[1]
@@ -30,6 +32,9 @@ sats_of_unknown_origin = 0
 unidentified_transactions = 0
 print("---TLV Messages---")
 
+startdate = datetime(2021,12,22,19,0,tzinfo=pytz.timezone('US/Eastern'))
+enddate = datetime(2021,12,29,19,0,tzinfo=pytz.timezone('US/Eastern'))
+
 # For every record in file
 mytlvs = []
 for line in csvlines:
@@ -37,10 +42,27 @@ for line in csvlines:
     if line[0:3] != "ï»¿":
         
         mytlv = RE_TLV.fromcsv(line)
-        mytlvs.append(mytlv)
+
+        try:
+            tlvdate = datetime.strptime(mytlv.getDate(), '%d/%b/%Y %H:%M')
+            tlvdate = tlvdate.replace(tzinfo=timezone.utc)
+            tlvdate = tlvdate.astimezone(pytz.timezone('US/Eastern'))
+
+            if tlvdate > startdate and tlvdate <= enddate:
+                mytlvs.append(mytlv)
+
+        except:
+            pass
+
+
     else:
         #print("BadLine")
         pass
+
+
+
+
+
 
     # Collate streaming sats by app
 for mytlv in mytlvs:
