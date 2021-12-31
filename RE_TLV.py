@@ -214,6 +214,13 @@ class RE_TLV:
 
         if not name:
             try:
+                name = r["sender_id"]
+            except:
+                pass
+
+
+        if not name:
+            try:
                 name = self.get7629171()
             except:
                 pass
@@ -294,6 +301,8 @@ class RE_TLV:
         try:
             if r["action"] == "boost":
                 isBoost = True
+            else:
+                pass
         except:
             pass
         return isBoost

@@ -11,7 +11,8 @@ from RE_TLV import RE_TLV
 import sys
 
 # Load RTL exported records
-fn = sys.argv[1]
+#fn = sys.argv[1]
+fn = "merged.csv"
 #fn = "Invoices_20211209_to_20211215.csv"
 with open(fn,mode='r') as file:
     #file.seek(3) # discard BOM
@@ -23,6 +24,8 @@ appsum = []
 apps = []
 boostsum = []
 boosters = []
+streamers = []
+streamsum = []
 sats_of_unknown_origin = 0
 unidentified_transactions = 0
 print("---TLV Messages---")
@@ -36,8 +39,8 @@ for line in csvlines:
         mytlv = RE_TLV.fromcsv(line)
         mytlvs.append(mytlv)
     else:
-        print("BadLine")
-
+        #print("BadLine")
+        pass
 
     # Collate streaming sats by app
 for mytlv in mytlvs:
@@ -45,20 +48,23 @@ for mytlv in mytlvs:
     asats = mytlv.getAmmountInt()
     rdate = mytlv.getDate()
 
-    if not mytlv.isBoost():
-        app = mytlv.getSenderApp()
-        asats = mytlv.getAmmountInt()
-        if not app:
-            app = "Unknown App"
-        try:
-            ind = apps.index(app)
-            appsum[ind] += asats
-        except:
-            apps.append(app)
-            appsum.append(asats)
+
+    app = mytlv.getSenderApp()
+    asats = mytlv.getAmmountInt()
+    streamer = mytlv.getSenderName()
+    if not streamer:
+        streamer = "Unknown Streamer"
+    try:
+        ind = streamers.index(streamer)
+        streamsum[ind] += asats
+    except:
+        streamers.append(streamer)
+        streamsum.append(asats)
+        
+        
 
     # Collate Boosts by name
-    elif mytlv.isBoost():
+    if mytlv.isBoost():
         booster = mytlv.getSenderName()
         bsats = mytlv.getAmmountInt()
         if not booster:
@@ -71,33 +77,46 @@ for mytlv in mytlvs:
             boostsum.append(bsats)
     else:
         sats_of_unknown_origin += mytlv.getAmmountInt()
-        unresolved_transactions += 1
+        unidentified_transactions += 1
 
     # Print any messages
-    if mytlv.hasMessage():
-        # print("Record Number: " + mytlv.getRecordNum())
-        print("\tShow Name: " + mytlv.getShowName())
-        print("\tAmmount: " + mytlv.getAmmount() + " sats")
-        print("\tDate: " + mytlv.getDate() + " UTC")
-        print("\tSender Name: " + mytlv.getSenderName())
-        print("\tSender App: " +  mytlv.getSenderApp())
-        print("\tMessage Text: " + mytlv.getMessage())
-        print("")
+    #if mytlv.hasMessage():
+    #    # print("Record Number: " + mytlv.getRecordNum())
+    #    print("\tShow Name: " + mytlv.getShowName())
+    #    print("\tAmmount: " + mytlv.getAmmount() + " sats")
+    #    print("\tDate: " + mytlv.getDate() + " UTC")
+    #    print("\tSender Name: " + mytlv.getSenderName())
+    #    print("\tSender App: " +  mytlv.getSenderApp())
+    #    print("\tMessage Text: " + mytlv.getMessage())
+    #    print("")
+
+
+
+# Sort streamers by totals
+streamsum, streamers = (list(t) for t in zip(*sorted(zip(streamsum, streamers),reverse=True)))
+
+# Print unique list of Streamers
+print("---Streamer Leaderboard---")
+for i in range(len(streamers)):
+    print(streamers[i] + " = " + str(streamsum[i]) + " sats")
+print("\tTotal From Streams: " + str(sum(streamsum)) + " sats")
+print("")
+
 
 # Print unique list of Apps
-print("---Sats From Streaming Apps---")
-for i in range(len(apps)):
-    print(apps[i] + " = " + str(appsum[i]) + " sats")
-print("\tTotal From Streams: " + str(sum(appsum)) + " sats")
-print("")
+#print("---Sats From Streaming Apps---")
+#for i in range(len(apps)):
+#    print(apps[i] + " = " + str(appsum[i]) + " sats")
+#print("\tTotal From Streams: " + str(sum(appsum)) + " sats")
+#print("")
 
 # Print unique list of Boosters
-print("---Sats From Boosters---")
-for i in range(len(boosters)):
-    print(boosters[i] + " = " + str(boostsum[i]) + " sats")
-print("\tTotal From Boosts: " + str(sum(boostsum)) + " sats")
-print("")
+#print("---Sats From Boosters---")
+#for i in range(len(boosters)):
+#    print(boosters[i] + " = " + str(boostsum[i]) + " sats")
+#print("\tTotal From Boosts: " + str(sum(boostsum)) + " sats")
+#print("")
 
 # Print Everything else
-print("---Sats of Unidentified Origin---")
-print(str(sats_of_unknown_origin) + " sats in " + str(unidentified_transactions) + " transactions\n")
+#print("---Sats of Unidentified Origin---")
+#print(str(sats_of_unknown_origin) + " sats in " + str(unidentified_transactions) + " transactions\n")
