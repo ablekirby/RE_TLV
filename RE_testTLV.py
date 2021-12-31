@@ -14,8 +14,8 @@ import sys
 fn = sys.argv[1]
 #fn = "Invoices_20211209_to_20211215.csv"
 with open(fn,mode='r') as file:
-    file.seek(3) # discard BOM
-    file.readline() #discard first line (header)
+    #file.seek(3) # discard BOM
+    #file.readline() #discard first line (header)
     csvlines = file.readlines() 
 
 print("")
@@ -28,9 +28,23 @@ unidentified_transactions = 0
 print("---TLV Messages---")
 
 # For every record in file
+mytlvs = []
 for line in csvlines:
     mytlv = RE_TLV.fromcsv(line)
+    if line[0:3] != "ï»¿":
+        
+        mytlv = RE_TLV.fromcsv(line)
+        mytlvs.append(mytlv)
+    else:
+        print("BadLine")
+
+
     # Collate streaming sats by app
+for mytlv in mytlvs:
+
+    asats = mytlv.getAmmountInt()
+    rdate = mytlv.getDate()
+
     if not mytlv.isBoost():
         app = mytlv.getSenderApp()
         asats = mytlv.getAmmountInt()
